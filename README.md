@@ -1,5 +1,24 @@
 # cpp-stl
 
-Hand-written STL container simulations in C++ for review.
+我的 C++ STL 容器模拟实现练习合集，每个容器一个文件夹，只提交源码。
 
-- `vector/` — vector simulation with tests
+## 项目列表
+
+| 目录 | 项目 | 说明 |
+| --- | --- | --- |
+| vector/ | 手写 vector | 模拟实现 std::vector：动态扩容、增删查改、深拷贝与迭代器，附 8 组测试 |
+
+## vector 踩坑记录
+
+### 扩容
+
+- `reserve` 要拷元素、删旧空间，先存旧 `size` 再换 `_start`
+- 满了才扩容；`capacity` 为 0 或 1 时乘 1.5 扩不动，要保证新容量大于旧容量
+- 搬元素逐个赋值，不能 `memcpy`，`string` 会浅拷贝重复释放
+- `reserve` 传小值不缩容，`clear` 不还空间
+
+### 迭代器失效
+
+- 扩容后全部迭代器、指针、引用失效，`insert` 要先存下标再扩容
+- 没扩容时，`insert/erase` 只让操作点及之后的失效，之前的还有效
+- `erase` 返回后继迭代器，循环删除要用返回值接续
